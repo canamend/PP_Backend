@@ -4,17 +4,14 @@ const CompanySchema = Schema({
     name: {
         type: String,
         required: [true, 'El nombre de la empresa'],
-        unique: true
     },
     phoneNumber: {
         type: Number,
         required: [true, 'El número de teléfono es obligatorio'],
-        unique: true
     },
     address: {
         type: String,
         required: [true, 'La dirección es obligatoria'],
-        unique: true
     },
     status: {
         type: Boolean,
