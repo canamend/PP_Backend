@@ -17,9 +17,9 @@ const login = async(req, res = response) => {
             })
         }
         //TODO: Verificar si el user está activo
-        if( !user.state  ){
+        if( !user.status  ){
             return res.status(400).json({
-                msg: 'Usuario / Password no son correctos - state: false'
+                msg: 'Usuario / Password no son correctos - status: false'
             });
         }
 
