@@ -46,12 +46,9 @@ router.put('/:id', [
         validarJWT,
         check('id', 'No es un id válido').isMongoId(),
         check('id').custom( companyExistsById ),
-        check('name').custom( (name) => nameExists(name, 'companies') ),
         check('name', 'El nombre de la compañía tiene que tener al menos 4 caracteres').isLength({ min: 4 }),
         check('phoneNumber').isMobilePhone('es-MX'),
-        check('phoneNumber').custom( (phoneNumber) => phoneExists(phoneNumber, 'companies') ),
         check('address', 'La dirección tiene que tener al menos 15 caracteres').isLength({ min: 15 }),
-        check('address').custom( (address) => addressExists(address, 'companies') ),
         isAdminRole,
         validarCampos
     ], updateCompany);
