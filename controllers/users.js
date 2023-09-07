@@ -12,6 +12,7 @@ const usersGet = async(req, res = response) => {
         User.find(query)
             .skip(Number(desde))
             .limit(Number(limite))
+            .populate({path: 'company', select: 'name -_id'})
     ])
 
     res.json({
@@ -23,24 +24,47 @@ const usersGet = async(req, res = response) => {
 const usersPut = async(req, res = response) => {
 
     const { id } = req.params;
-    const { _id, password, google, email, ...resto } = req.body;
+    const { name, email, phoneNumber } = req.body;
+    let { password } = req.body;
+    
+    const usersDuplicated = await User.find({$or:[
+        { email, status: true },
+        { phoneNumber, status: true }]
+    });
 
-    //TODO: Validar contra base de datos
+    let duplicated = [];
+    usersDuplicated.forEach( user  => {
+        const { email: dEmail, phoneNumber: dPhoneNumber } = user;
+        if( !user._id.equals(id) ){
+            if( dEmail === email )   duplicated.push(email);
+            if( dPhoneNumber === phoneNumber )   duplicated.push(phoneNumber);
+        }
+    });
+
+    if( duplicated.length > 0 ){
+        return res.status(400).json({ msg: `Los datos ${duplicated} ya aparecen en la base de datos`})
+    }  
     
     if( password ) {
         const salt = bcrypt.genSaltSync();
-        resto.password = bcrypt.hashSync( password, salt );
+        password = bcrypt.hashSync( password, salt );
     }
 
-    const usuario = await User.findByIdAndUpdate( id, resto );
+    const data = {
+        name,
+        email,
+        phoneNumber,
+        password
+    }
+    const usuario = await User.findByIdAndUpdate( id, data );
 
     res.json(usuario);
 }
 
 const usersPost = async(req, res = response) => {
 
-    const { name, email, password, role} = req.body;
-    const usuario = new User( {name, email, password, role} );
+    const { status, _id, password, ...resto } = req.body;
+    const usuario = new User( resto );
 
     //TODO: Encriptar la contraseña
     const salt = bcrypt.genSaltSync();
@@ -61,22 +85,14 @@ const usersDelete = async(req, res = response) => {
     
 
     //Fisicamente borrado
-    const usuario = await User.findByIdAndUpdate( id, { state:false } );
+    const usuario = await User.findByIdAndUpdate( id, { status:false } );
     // const usuarioAutenticado = req.user;
 
     res.json(usuario);
 }
-
-const usersPatch = (req, res = response) => {
-    res.json({
-        msg: 'patch API - controlador'
-    });
-}
-
 module.exports = {
     usersGet,
     usersPut,
     usersPost,
     usersDelete,
-    usersPatch,
 }
