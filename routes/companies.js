@@ -2,16 +2,10 @@ const { Router } = require('express');
 const { check } = require('express-validator');
 
 const {
-        validarCampos, validarJWT, validarCategoryId, isAdminRole
+        validarCampos, validarJWT, isAdminRole
 } = require('../middlewares');
-const { createCategory,
-        getCategories,
-        getCategory,
-        updateCategory, 
-        deleteCategory} = require('../controllers/categories');
 const { companyExistsById, phoneExists, nameExists, addressExists } = require('../helpers/db-validators');
 const { createCompany, getCompanies, getCompany, updateCompany, deleteCompany } = require('../controllers/companies');
-const { validateDuplicatedCompanyData } = require('../middlewares/validate-duplicated');
 
 
 const router = Router();

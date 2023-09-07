@@ -55,7 +55,6 @@ const updateCompany= async(req = request, res = response ) =>{
     let duplicated = [];
     companiesDuplicated.forEach( company  => {
         const { name, address, phoneNumber } = company;
-        console.log(company._id, id);
         if( !company._id.equals(id) ){
             if( name === resto.name )   duplicated.push(name);
             if( phoneNumber === resto.phoneNumber )   duplicated.push(phoneNumber);
