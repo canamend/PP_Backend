@@ -24,17 +24,18 @@ const UserSchema = Schema({
     },
     role: {
         type: String,
-        required: true,
-        enum: ['ADMIN_ROLE', 'USER_ROLE', 'VENTAS_ROLE']
+        required: [true, 'Al usuario se le tiene que asignar un rol'],
+        enum: ['ADMIN_ROLE', 'USER_ROLE']
+    },
+    company: {
+        type: Schema.Types.ObjectId,
+        ref: 'Company',
+        required: [true, 'Es necesario que el usuario esté afiliado a una empresa'],
     },
     status: {
         type: Boolean,
         default: true
     },
-    // google: {
-    //     type: Boolean,
-    //     default: false
-    // }
 });
 
 UserSchema.methods.toJSON = function() {
