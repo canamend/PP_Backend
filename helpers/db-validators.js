@@ -95,6 +95,13 @@ const userExistsById = async( id = '') => {
     }   
 }
 
+const supplierExistsById = async( id = '') => {
+    const supplierExists = await Supplier.findById(id);
+    if( !supplierExists ){
+        throw new Error(`El id no existe`);
+    }   
+}
+
 const categoryExistById = async( id = '') =>{
     const categoryExists = await Category.findById(id);
     
@@ -146,5 +153,6 @@ module.exports = {
     nameExists,
     productExists,
     productExistById,
+    supplierExistsById
 }
     
