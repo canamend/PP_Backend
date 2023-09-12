@@ -12,6 +12,8 @@ const getProducts = async(req, res = response ) =>{
             .limit(Number(limite))
             .populate({path: 'user', select: 'name -_id'})
             .populate({path: 'category', select: 'name -_id'})
+            .populate({path: 'company', select: 'name -_id'})
+            .populate({path: 'supplier', select: 'name -_id'})
     ])
 
     res.json({
@@ -24,7 +26,9 @@ const getProduct = async( req, res = response ) => {
     const { id }  = req.params;
     let productDB = await Product.findById(id)
                                    .populate({path: 'user', select: 'name -_id'})
-                                   .populate({path: 'category', select: 'name -_id'});
+                                   .populate({path: 'category', select: 'name -_id'})
+                                   .populate({path: 'company', select: 'name -_id'})
+                                   .populate({path: 'supplier', select: 'name -_id'});
     res.json({
         productDB,
     })
@@ -50,13 +54,15 @@ const updateProduct = async(req = request, res = response ) =>{
 }
 
 const createProduct = async(req, res = response ) => {
-    const { status, disponible, name, ...resto } = req.body;
+    const { status, disponible, name, company, ...resto } = req.body;
     const nameToDB = name.toUpperCase();
+    const reqCompany = req.user.company;
 
     const data = {
         name: nameToDB,
         ...resto,
-        user: req.user._id
+        user: req.user._id,
+        company: reqCompany
     }
 
     const product = new Product(data);
