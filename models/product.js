@@ -4,18 +4,32 @@ const ProductSchema = Schema({
     name: {
         type: String,
         required: [true, 'El nombre del producto es obligatorio'],
-        unique: true
     },
-    status: {
-        type: Boolean,
-        default: true,
-        required: true
+    company: {
+        type: Schema.Types.ObjectId,
+        ref: 'Company',
+        required: true,        
+    },
+    supplier: {
+        type: Schema.Types.ObjectId,
+        ref: 'Supplier',
+        required: true,
     },
     user: {
         type: Schema.Types.ObjectId,
         ref: 'User',
         required: true
     },
+    stock: {
+        type:Number,
+        default: 0,
+    },
+    status: {
+        type: Boolean,
+        default: true,
+        required: true
+    },
+    description: { type: String },
     price: {
         type: Number,
         default: 0,
@@ -25,8 +39,6 @@ const ProductSchema = Schema({
         ref: 'Category',
         required: true,
     },
-    description: { type: String },
-    disponible: { type: Boolean, default: true },
     img: { type: String }
 });
 
