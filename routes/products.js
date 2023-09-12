@@ -8,7 +8,9 @@ const {
 } = require('../middlewares');
 const { categoryExistById, 
         productExists, 
-        productExistById } = require('../helpers/db-validators');
+        productExistById, 
+        companyExistsById,
+        supplierExistsById} = require('../helpers/db-validators');
 const { createProduct, 
         getProducts, 
         getProduct, 
@@ -32,11 +34,12 @@ router.get('/:id', [
         validarCampos
     ], getProduct);
 
-// Crear categoria - privado - cualquier persona con token válido
+// Crear producto - privado - cualquier persona con token válido
 router.post('/', [
         validarJWT,
         check('name', 'El nombre del producto es obligatorio').not().isEmpty(),
-        check('name').custom( productExists ),
+        check('supplier', 'No es un id válido').isMongoId(),
+        check('supplier').custom( supplierExistsById ),
         check('category', 'No es un id válido').isMongoId(),
         check('category').custom( categoryExistById ),
         validarCampos,
